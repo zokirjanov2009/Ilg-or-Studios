@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, CheckCircle2, Mail, Phone, Send, Sparkles } from 'lucide-react'
 import { Background } from './components/Background'
+import { LANGS, LANGUAGE_OPTIONS, LANGUAGE_STORAGE_KEY, type Lang, translations } from './i18n/translations'
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
@@ -100,6 +101,18 @@ function Section({
 }
 
 export default function App() {
+  const [lang, setLang] = useState<Lang>(() => {
+    const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
+    return LANGS.includes(saved as Lang) ? (saved as Lang) : 'uz'
+  })
+
+  useEffect(() => {
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lang)
+    document.documentElement.lang = lang
+  }, [lang])
+
+  const t = translations[lang]
+
   return (
     <div className="relative">
       <Background />
@@ -112,41 +125,67 @@ export default function App() {
               <Sparkles className="h-4 w-4 text-cyan-200/80" />
             </span>
             <div className="leading-tight">
-              <div className="text-sm font-semibold text-slate-50">Ilg'or studios</div>
-              <div className="text-[11px] text-slate-200/55">IT kompaniya</div>
+              <div className="text-sm font-semibold text-slate-50">{t.brand.title}</div>
+              <div className="text-[11px] text-slate-200/55">{t.brand.subtitle}</div>
             </div>
           </a>
 
           <div className="hidden items-center gap-6 text-sm text-slate-200/70 md:flex">
             <a className="hover:text-slate-50" href="#services">
-              Xizmatlar
+              {t.nav.services}
             </a>
             <a className="hover:text-slate-50" href="#pricing">
-              Paketlar
+              {t.nav.pricing}
             </a>
             <a className="hover:text-slate-50" href="#process">
-              Jarayon
+              {t.nav.process}
             </a>
             <a className="hover:text-slate-50" href="#faq">
-              FAQ
+              {t.nav.faq}
             </a>
             <a className="hover:text-slate-50" href="#contact">
-              Aloqa
+              {t.nav.contact}
             </a>
           </div>
 
           <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 rounded-2xl border border-white/12 bg-slate-900/70 p-1 backdrop-blur-xl">
+                {LANGUAGE_OPTIONS.map((option) => (
+                <button
+                  key={option.code}
+                  type="button"
+                  onClick={() => setLang(option.code)}
+                  aria-label={`${t.nav.languageLabel}: ${option.label}`}
+                  className={`group relative overflow-hidden rounded-xl px-2.5 py-1.5 text-[11px] font-semibold transition ${
+                    option.code === lang
+                      ? 'bg-linear-to-r from-cyan-300/25 to-indigo-300/25 text-white ring-1 ring-cyan-200/45'
+                      : 'text-slate-200/80 hover:bg-white/8 hover:text-slate-50'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <img
+                      src={option.flagSrc}
+                      alt={option.label}
+                      className="h-3.5 w-5 rounded-[2px] object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span>{option.shortLabel}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
             <a
               className="hidden rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-100/80 transition hover:bg-white/8 md:inline-flex"
               href="#pricing"
             >
-              Paketlar
+              {t.nav.pricingShort}
             </a>
             <a
               className="rounded-xl bg-indigo-500 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-400"
               href="#contact"
             >
-              Bog'lanish
+              {t.nav.contactShort}
             </a>
           </div>
         </div>
@@ -156,44 +195,39 @@ export default function App() {
       <header id="top" className="mx-auto max-w-6xl px-4 pb-16 pt-16 md:px-6 md:pb-24 md:pt-24">
         <motion.div variants={container} initial="hidden" animate="show" className="relative">
           <motion.div variants={item} className="mb-6 flex flex-wrap gap-2">
-            <Pill>⚡ Tez, chiroyli, stabil</Pill>
-            <Pill>🎯 Biznesga yo‘naltirilgan UI/UX</Pill>
-            <Pill>🔒 Xavfsizlik + SEO</Pill>
+            {t.hero.pills.map((pill) => (
+              <Pill key={pill}>{pill}</Pill>
+            ))}
           </motion.div>
 
           <motion.h1
             variants={item}
             className="text-balance text-4xl font-semibold tracking-tight text-slate-50 md:text-6xl"
           >
-            Ilg'or studios bilan g‘oyani{' '}
+            {t.hero.titleBefore}{' '}
             <span className="bg-linear-to-r from-cyan-200 to-indigo-200 bg-clip-text text-transparent">
-              ishlaydigan
+              {t.hero.titleAccent}
             </span>{' '}
-            mahsulotga aylantiring.
+            {t.hero.titleAfter}
           </motion.h1>
 
           <motion.p
             variants={item}
             className="mt-5 max-w-2xl text-pretty text-sm leading-relaxed text-slate-200/72 md:text-base"
           >
-            Biz web sayt, landing, admin panel va biznes jarayonlarini avtomatlashtiruvchi web-yechimlar qilamiz. Maqsad
-            bitta: dizayn chiroyli bo‘lsin, tez ishlasin va sotuv/so‘rov olib kelsin.
+            {t.hero.desc}
           </motion.p>
 
           <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-3">
-            <PrimaryLink href="#pricing">Paketlar va muddat</PrimaryLink>
-            <GhostLink href="#services">Xizmatlar</GhostLink>
+            <PrimaryLink href="#pricing">{t.hero.primary}</PrimaryLink>
+            <GhostLink href="#services">{t.hero.secondary}</GhostLink>
           </motion.div>
 
           <motion.div
             variants={item}
             className="mt-10 grid gap-3 rounded-3xl border border-white/10 bg-white/4 p-5 md:grid-cols-3"
           >
-            {[
-              { k: '7–21 kun', v: 'Ko‘p loyihalar muddati' },
-              { k: 'Aniq plan', v: 'Bosqichma-bosqich topshirish' },
-              { k: 'Toza kod', v: 'Performance + SEO asoslari' },
-            ].map((s) => (
+            {t.hero.stats.map((s) => (
               <div key={s.k} className="rounded-2xl bg-white/3 p-4 ring-1 ring-white/8">
                 <div className="text-xl font-semibold text-slate-50">{s.k}</div>
                 <div className="mt-1 text-xs text-slate-200/65">{s.v}</div>
@@ -205,37 +239,12 @@ export default function App() {
 
       <Section
         id="services"
-        eyebrow="XIZMATLAR"
-        title="Bitta jamoa — to‘liq yechim."
-        subtitle="Sizga kerak bo‘lgan hammasi: dizayn, frontend, backend, integratsiya, SEO va deploy. Biz har bir bosqichda sifatni nazorat qilamiz."
+        eyebrow={t.services.eyebrow}
+        title={t.services.title}
+        subtitle={t.services.subtitle}
       >
         <div className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              title: 'Landing & korporativ sayt',
-              desc: 'Konversiya, tezlik, SEO, animatsiya va premium ko‘rinish.',
-            },
-            {
-              title: 'Web-app & admin panel',
-              desc: 'Role-based access, dashboard, analytics, integratsiyalar.',
-            },
-            {
-              title: 'UI/UX dizayn + brand',
-              desc: 'Figma dizayn, design-system, prototip va user-flow.',
-            },
-            {
-              title: 'API & integratsiya',
-              desc: 'Telegram bot, payment, CRM, ERP, Google services.',
-            },
-            {
-              title: 'Performance & Security',
-              desc: 'Core Web Vitals, optimizatsiya, xavfsiz konfiguratsiya.',
-            },
-            {
-              title: 'Texnik support',
-              desc: 'Monitoring, update, kontent, A/B test va iteratsiya.',
-            },
-          ].map((c) => (
+          {t.services.cards.map((c) => (
             <motion.div
               key={c.title}
               initial={{ opacity: 0, y: 10 }}
@@ -248,7 +257,7 @@ export default function App() {
               <div className="mt-2 text-sm leading-relaxed text-slate-200/70">{c.desc}</div>
               <div className="mt-4 inline-flex items-center gap-2 text-xs text-slate-100/70">
                 <CheckCircle2 className="h-4 w-4 text-cyan-200/70" />
-                Tayyor natija + aniq deadline
+                {t.services.cardBadge}
               </div>
             </motion.div>
           ))}
@@ -257,34 +266,12 @@ export default function App() {
 
       <Section
         id="pricing"
-        eyebrow="PAKETLAR"
-        title="Tushunarli paketlar. Moslashuvchan shartlar."
-        subtitle="Har bir paketda: dizayn, moslashuvchan layout, SEO asoslari va deploy bor. Narx/muddat loyiha hajmiga qarab aniqlanadi."
+        eyebrow={t.pricing.eyebrow}
+        title={t.pricing.title}
+        subtitle={t.pricing.subtitle}
       >
         <div className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              name: 'Start',
-              tag: 'Landing / promo-sahifa',
-              time: '7–10 kun',
-              price: 'Kelishiladi',
-              points: ['1 sahifa (hero + sectionlar)', 'Adaptiv (mobile/desktop)', 'Kontakt/so‘rov CTA'],
-            },
-            {
-              name: 'Business',
-              tag: 'Korporativ sayt',
-              time: '10–18 kun',
-              price: 'Kelishiladi',
-              points: ['3–7 sahifa', 'CMS yoki admin (ixtiyoriy)', 'Integratsiya: Telegram/Email'],
-            },
-            {
-              name: 'Pro',
-              tag: 'Web-app / admin panel',
-              time: '14–30 kun',
-              price: 'Kelishiladi',
-              points: ['Auth + rollar', 'Dashboard + CRUD', 'Deploy + monitoring'],
-            },
-          ].map((p) => (
+          {t.pricing.plans.map((p) => (
             <motion.div
               key={p.name}
               initial={{ opacity: 0, y: 10 }}
@@ -305,7 +292,7 @@ export default function App() {
                 </div>
 
                 <div className="mt-5 rounded-2xl bg-white/4 p-4 ring-1 ring-white/8">
-                  <div className="text-xs text-slate-200/60">Narx</div>
+                  <div className="text-xs text-slate-200/60">{t.pricing.priceLabel}</div>
                   <div className="mt-1 text-lg font-semibold text-slate-50">{p.price}</div>
                 </div>
 
@@ -319,8 +306,8 @@ export default function App() {
                 </ul>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <PrimaryLink href="#contact">So‘rov yuborish</PrimaryLink>
-                  <GhostLink href="#process">Jarayon</GhostLink>
+                  <PrimaryLink href="#contact">{t.pricing.sendRequest}</PrimaryLink>
+                  <GhostLink href="#process">{t.pricing.process}</GhostLink>
                 </div>
               </div>
             </motion.div>
@@ -330,25 +317,12 @@ export default function App() {
 
       <Section
         id="process"
-        eyebrow="JARAYON"
-        title="Soddalashtirilgan, lekin professional."
-        subtitle="Biz siz bilan bir xil tilda gaplashamiz: maqsad → yechim → natija. Har bosqichda demo va aniqlik bo‘ladi."
+        eyebrow={t.process.eyebrow}
+        title={t.process.title}
+        subtitle={t.process.subtitle}
       >
         <div className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              t: '1) Talablarni aniqlash',
-              d: 'Maqsad, auditoriya, sahifalar tarkibi, integratsiya va deadline.',
-            },
-            {
-              t: '2) Dizayn + prototip',
-              d: 'Figma: hero, sectionlar, komponentlar, animatsiya g‘oyasi.',
-            },
-            {
-              t: '3) Development + launch',
-              d: 'React/Tailwind, optimizatsiya, SEO, deploy va support.',
-            },
-          ].map((s) => (
+          {t.process.steps.map((s) => (
             <motion.div
               key={s.t}
               initial={{ opacity: 0, y: 10 }}
@@ -366,29 +340,12 @@ export default function App() {
 
       <Section
         id="faq"
-        eyebrow="FAQ"
-        title="Ko‘p so‘raladigan savollar."
-        subtitle="Qisqa va aniq javoblar. Agar savolingiz boshqacha bo‘lsa, yozing — tezda yo‘naltiramiz."
+        eyebrow={t.faq.eyebrow}
+        title={t.faq.title}
+        subtitle={t.faq.subtitle}
       >
         <div className="grid gap-4 md:grid-cols-2">
-          {[
-            {
-              q: 'Narx qanday hisoblanadi?',
-              a: 'Sahifalar soni, funksiyalar (admin, auth, integratsiya), dizayn murakkabligi va muddatga qarab aniqlanadi.',
-            },
-            {
-              q: 'Muddat qancha bo‘ladi?',
-              a: 'Landing odatda 7–10 kun. Korporativ sayt 10–18 kun. Web-app 14–30 kun (scope’ga bog‘liq).',
-            },
-            {
-              q: 'Domen/hostingni kim qiladi?',
-              a: 'Xohlasangiz, sizga mos variantni tanlashda yordam beramiz va deploy’ni o‘zimiz qilib beramiz.',
-            },
-            {
-              q: 'Keyin support bormi?',
-              a: 'Ha. Launch’dan keyin texnik yordam va kichik o‘zgarishlar uchun support formatini kelishib olamiz.',
-            },
-          ].map((f) => (
+          {t.faq.items.map((f) => (
             <motion.div
               key={f.q}
               initial={{ opacity: 0, y: 10 }}
@@ -413,9 +370,9 @@ export default function App() {
 
       <Section
         id="contact"
-        eyebrow="ALOQA"
-        title="Loyihani boshlaymizmi?"
-        subtitle="Biz bilan bog‘laning: Telegram, email yoki telefon orqali. Odatda 24 soat ichida javob beramiz."
+        eyebrow={t.contact.eyebrow}
+        title={t.contact.title}
+        subtitle={t.contact.subtitle}
       >
         <div className="grid gap-4 md:grid-cols-2">
           <div className="glass relative overflow-hidden rounded-3xl p-7 ring-1 ring-white/10">
@@ -425,13 +382,11 @@ export default function App() {
             <div className="relative">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-lg font-semibold text-slate-50">Aloqa</div>
-                  <div className="mt-1 text-sm leading-relaxed text-slate-200/70">
-                    1–2 gap bilan yozing: nima kerak, qaysi muddat, taxminiy byudjet (ixtiyoriy).
-                  </div>
+                  <div className="text-lg font-semibold text-slate-50">{t.contact.cardTitle}</div>
+                  <div className="mt-1 text-sm leading-relaxed text-slate-200/70">{t.contact.cardDesc}</div>
                 </div>
                 <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-100/80">
-                  24 soat ichida javob
+                  {t.contact.replyBadge}
                 </span>
               </div>
 
@@ -448,7 +403,7 @@ export default function App() {
                     </span>
                     <ArrowRight className="h-4 w-4 text-slate-200/60 transition group-hover:translate-x-0.5 group-hover:text-slate-50" />
                   </div>
-                  <div className="mt-3 text-base font-semibold text-slate-50">Telegram</div>
+                  <div className="mt-3 text-base font-semibold text-slate-50">{t.contact.telegram}</div>
                   <div className="mt-1 text-xs text-slate-200/65">@lazyswe</div>
                 </a>
 
@@ -462,7 +417,7 @@ export default function App() {
                     </span>
                     <ArrowRight className="h-4 w-4 text-slate-200/60 transition group-hover:translate-x-0.5 group-hover:text-slate-50" />
                   </div>
-                  <div className="mt-3 text-base font-semibold text-slate-50">Email</div>
+                  <div className="mt-3 text-base font-semibold text-slate-50">{t.contact.email}</div>
                   <div className="mt-1 text-xs text-slate-200/65">hello@ilgor.studio</div>
                 </a>
 
@@ -476,7 +431,7 @@ export default function App() {
                     </span>
                     <ArrowRight className="h-4 w-4 text-slate-200/60 transition group-hover:translate-x-0.5 group-hover:text-slate-50" />
                   </div>
-                  <div className="mt-3 text-base font-semibold text-slate-50">Telefon</div>
+                  <div className="mt-3 text-base font-semibold text-slate-50">{t.contact.phone}</div>
                   <div className="mt-1 text-xs text-slate-200/65">+998 (90) 158 18 81</div>
                 </a>
               </div>
@@ -484,20 +439,13 @@ export default function App() {
           </div>
 
           <div className="glass rounded-3xl p-7 ring-1 ring-white/10">
-            <div className="text-lg font-semibold text-slate-50">Nima yuborsangiz yetadi?</div>
-            <div className="mt-2 text-sm leading-relaxed text-slate-200/70">
-              Quyidagilardan 2–3 tasini yozsangiz, tezda aniq taklif va muddat aytamiz.
-            </div>
+            <div className="text-lg font-semibold text-slate-50">{t.contact.detailsTitle}</div>
+            <div className="mt-2 text-sm leading-relaxed text-slate-200/70">{t.contact.detailsDesc}</div>
             <ul className="mt-5 space-y-3 text-sm text-slate-200/70">
-              {[
-                'Sayt turi: landing / korporativ / web-app',
-                'Kerakli sahifalar yoki funksiyalar (masalan: katalog, admin, payment)',
-                'Deadline (qachonga kerak)',
-                'Byudjet diapazoni (ixtiyoriy)',
-              ].map((t) => (
-                <li key={t} className="flex items-start gap-2">
+              {t.contact.checklist.map((check) => (
+                <li key={check} className="flex items-start gap-2">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cyan-200/70" />
-                  <span>{t}</span>
+                  <span>{check}</span>
                 </li>
               ))}
             </ul>
@@ -507,13 +455,15 @@ export default function App() {
 
       <footer className="border-t border-white/6 py-10">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 text-sm text-slate-200/60 md:flex-row md:items-center md:justify-between md:px-6">
-          <div>© {new Date().getFullYear()} Ilg'or studios. Barcha huquqlar himoyalangan.</div>
+          <div>
+            © {new Date().getFullYear()} Ilg'or studios. {t.footer.rights}
+          </div>
           <div className="flex items-center gap-4">
             <a className="hover:text-slate-50" href="#top">
-              Yuqoriga
+              {t.footer.top}
             </a>
             <a className="hover:text-slate-50" href="#contact">
-              Aloqa
+              {t.footer.contact}
             </a>
           </div>
         </div>
