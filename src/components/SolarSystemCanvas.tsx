@@ -32,7 +32,7 @@ function setupTexture(tex: THREE.Texture, anisotropy: number) {
 }
 
 function OrbitRing({ r }: { r: number }) {
-  const geom = useMemo(() => new THREE.RingGeometry(r - 0.004, r + 0.004, 512), [r])
+  const geom = useMemo(() => new THREE.RingGeometry(r - 0.004, r + 0.004, 192), [r])
   const mat = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
@@ -75,7 +75,7 @@ function SolarSystem({
   const tex = useTexture(urls)
 
   useEffect(() => {
-    const aniso = 8
+    const aniso = 4
     Object.values(tex).forEach((t) => setupTexture(t, aniso))
   }, [tex])
 
@@ -93,7 +93,7 @@ function SolarSystem({
     [],
   )
 
-  const ringGeom = useMemo(() => new THREE.RingGeometry(0.58, 1.05, 160), [])
+  const ringGeom = useMemo(() => new THREE.RingGeometry(0.58, 1.05, 96), [])
   const ringMat = useMemo(() => {
     return new THREE.MeshBasicMaterial({
       map: tex.saturnRing,
@@ -188,8 +188,8 @@ function SolarSystem({
       ))}
 
       {/* sun */}
-      <mesh geometry={new THREE.SphereGeometry(0.72, 112, 84)} material={sunMat} />
-      <mesh geometry={new THREE.SphereGeometry(0.82, 80, 60)} material={glowMat} />
+      <mesh geometry={new THREE.SphereGeometry(0.72, 64, 48)} material={sunMat} />
+      <mesh geometry={new THREE.SphereGeometry(0.82, 48, 36)} material={glowMat} />
 
       {/* planets */}
       {planetSpecs.map((pl) => {
@@ -203,7 +203,7 @@ function SolarSystem({
               ref={(m) => {
                 planetMeshesRef.current[pl.key] = m
               }}
-              geometry={new THREE.SphereGeometry(pl.radius, 72, 54)}
+              geometry={new THREE.SphereGeometry(pl.radius, 36, 28)}
               material={mat}
             />
             {pl.hasRing && (
@@ -230,8 +230,8 @@ export function SolarSystemCanvas({
 }) {
   return (
     <Canvas
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      dpr={[1, 1.5]}
+      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: [0, 14.2, 0.01], fov: 40, near: 0.1, far: 120 }}
       style={{ width: '100%', height: '100%' }}
       onCreated={({ gl, camera }) => {
