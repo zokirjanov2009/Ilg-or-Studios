@@ -15,6 +15,7 @@ const io = new SocketServer(server, {
 })
 
 const PORT = Number(process.env.PORT ?? 4000)
+const HOST = process.env.HOST ?? '0.0.0.0'
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'admin123'
 const TOKEN_SECRET = process.env.TOKEN_SECRET ?? 'replace-this-secret'
 const uploadsDir = join(process.cwd(), 'server', 'uploads')
@@ -190,6 +191,6 @@ io.on('connection', (socket) => {
   })
 })
 
-server.listen(PORT, () => {
-  console.log(`Monitoring server running on http://localhost:${PORT}`)
+server.listen(PORT, HOST, () => {
+  console.log(`Monitoring server running on http://${HOST}:${PORT}`)
 })
