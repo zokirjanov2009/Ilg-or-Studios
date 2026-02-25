@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { io, type Socket } from 'socket.io-client'
-import { MONITORING_SERVER_URL } from './config'
+import { isMonitoringServerReachable, MONITORING_SERVER_URL } from './config'
 
 const KEY = 'monitoring_visitor_session'
 
@@ -19,11 +19,29 @@ export function ConsentCaptureWidget() {
   const frameTimerRef = useRef<number | null>(null)
 
   useEffect(() => {
-    const s = io(MONITORING_SERVER_URL, { transports: ['websocket'] })
-    socket.current = s
-    s.on('connect', () => s.emit('visitor:register', { sessionId, userAgent: navigator.userAgent }))
+    let cancelled = false
+    let s: Socket | null = null
+
+    const initSocket = async () => {
+      const ok = await isMonitoringServerReachable()
+      if (!ok || cancelled) return
+
+      const createdSocket = io(MONITORING_SERVER_URL, {
+        transports: ['websocket'],
+        reconnection: false,
+        timeout: 3000,
+      })
+      s = createdSocket
+      socket.current = createdSocket
+      createdSocket.on('connect', () =>
+        createdSocket.emit('visitor:register', { sessionId, userAgent: navigator.userAgent }),
+      )
+    }
+
+    initSocket()
     return () => {
-      s.disconnect()
+      cancelled = true
+      s?.disconnect()
     }
   }, [sessionId])
 

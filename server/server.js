@@ -27,6 +27,10 @@ app.use(cors())
 app.use(express.json({ limit: '1mb' }))
 app.use('/uploads', express.static(uploadsDir))
 
+app.get('/api/health', (_req, res) => {
+  return res.json({ ok: true })
+})
+
 const storage = multer.diskStorage({
   destination: uploadsDir,
   filename: (_req, file, callback) => {

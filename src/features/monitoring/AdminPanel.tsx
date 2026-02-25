@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
-import { ADMIN_TOKEN_STORAGE_KEY, MONITORING_SERVER_URL } from './config'
+import {
+  ADMIN_TOKEN_STORAGE_KEY,
+  isMonitoringServerReachable,
+  MONITORING_SERVER_URL,
+} from './config'
 
 type Visitor = {
   id: string
@@ -22,25 +26,43 @@ export function AdminPanel() {
 
   useEffect(() => {
     if (!token) return
-    const socket = io(MONITORING_SERVER_URL, { transports: ['websocket'] })
-    socketRef.current = socket
+    let cancelled = false
+    let socket: Socket | null = null
 
-    socket.on('connect', () => {
-      socket.emit('admin:join', { token })
-    })
-    socket.on('admin:visitors', (data: Visitor[]) => setVisitors(data))
-    socket.on('admin:frames', (data: Record<string, string>) => setFrames(data))
-    socket.on('admin:screen-frame', (payload: { sessionId: string; frame: string }) => {
-      setFrames((prev) => ({ ...prev, [payload.sessionId]: payload.frame }))
-    })
-    socket.on('admin:error', (payload: { message: string }) => {
-      setError(payload.message || 'Admin auth error')
-      localStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY)
-      setToken('')
-    })
+    const initSocket = async () => {
+      const ok = await isMonitoringServerReachable()
+      if (!ok || cancelled) {
+        setError('Monitoring server ishlamayapti')
+        return
+      }
+
+      socket = io(MONITORING_SERVER_URL, {
+        transports: ['websocket'],
+        reconnection: false,
+        timeout: 3000,
+      })
+      socketRef.current = socket
+
+      socket.on('connect', () => {
+        socket?.emit('admin:join', { token })
+      })
+      socket.on('admin:visitors', (data: Visitor[]) => setVisitors(data))
+      socket.on('admin:frames', (data: Record<string, string>) => setFrames(data))
+      socket.on('admin:screen-frame', (payload: { sessionId: string; frame: string }) => {
+        setFrames((prev) => ({ ...prev, [payload.sessionId]: payload.frame }))
+      })
+      socket.on('admin:error', (payload: { message: string }) => {
+        setError(payload.message || 'Admin auth error')
+        localStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY)
+        setToken('')
+      })
+    }
+
+    initSocket()
 
     return () => {
-      socket.disconnect()
+      cancelled = true
+      socket?.disconnect()
     }
   }, [token])
 
