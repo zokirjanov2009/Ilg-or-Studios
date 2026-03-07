@@ -2,8 +2,6 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, CheckCircle2, Mail, Phone, Send, Sparkles } from 'lucide-react'
 import { Background } from './components/Background'
-import { AdminPanel } from './features/monitoring/AdminPanel'
-import { ConsentCaptureWidget } from './features/monitoring/ConsentCaptureWidget'
 import { LANGS, LANGUAGE_OPTIONS, LANGUAGE_STORAGE_KEY, type Lang, translations } from './i18n/translations'
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
@@ -103,7 +101,6 @@ function Section({
 }
 
 export default function App() {
-  const isAdminRoute = window.location.pathname.startsWith('/admin')
   const [lang, setLang] = useState<Lang>(() => {
     const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
     return LANGS.includes(saved as Lang) ? (saved as Lang) : 'uz'
@@ -115,10 +112,6 @@ export default function App() {
   }, [lang])
 
   const t = translations[lang]
-
-  if (isAdminRoute) {
-    return <AdminPanel />
-  }
 
   return (
     <div className="relative">
@@ -475,7 +468,6 @@ export default function App() {
           </div>
         </div>
       </footer>
-      <ConsentCaptureWidget />
     </div>
   )
 }

@@ -28,7 +28,7 @@ export const translations = {
       titleBefore: "Ilg'or studios bilan g‘oyani",
       titleAccent: 'ishlaydigan',
       titleAfter: 'mahsulotga aylantiring.',
-      desc: 'Biz web sayt, landing, admin panel va biznes jarayonlarini avtomatlashtiruvchi web-yechimlar qilamiz. Maqsad bitta: dizayn chiroyli bo‘lsin, tez ishlasin va sotuv/so‘rov olib kelsin.',
+      desc: 'Biz web sayt, landing va biznes jarayonlarini avtomatlashtiruvchi web-yechimlar qilamiz. Maqsad bitta: dizayn chiroyli bo‘lsin, tez ishlasin va sotuv/so‘rov olib kelsin.',
       primary: 'Paketlar va muddat',
       secondary: 'Xizmatlar',
       stats: [
@@ -44,11 +44,11 @@ export const translations = {
         'Sizga kerak bo‘lgan hammasi: dizayn, frontend, backend, integratsiya, SEO va deploy. Biz har bir bosqichda sifatni nazorat qilamiz.',
       cards: [
         { title: 'Landing va korporativ sayt', desc: 'Konversiya, tezlik, SEO, animatsiya va premium ko‘rinish.' },
-        { title: 'Web-app va admin panel', desc: 'Role-based access, dashboard, analytics, integratsiyalar.' },
+        { title: 'Web-app yechimlar', desc: 'Role-based access, dashboard, analytics, integratsiyalar.' },
         { title: 'UI/UX dizayn + brand', desc: 'Figma dizayn, design-system, prototip va user-flow.' },
         { title: 'API va integratsiya', desc: 'Telegram bot, payment, CRM, ERP, Google services.' },
         { title: 'Performance va Security', desc: 'Core Web Vitals, optimizatsiya, xavfsiz konfiguratsiya.' },
-        { title: 'Texnik support', desc: 'Monitoring, update, kontent, A/B test va iteratsiya.' },
+        { title: 'Texnik support', desc: 'Update, kontent, A/B test va iteratsiya.' },
       ],
       cardBadge: 'Tayyor natija + aniq deadline',
     },
@@ -73,14 +73,14 @@ export const translations = {
           tag: 'Korporativ sayt',
           time: '10-18 kun',
           price: 'Kelishiladi',
-          points: ['3-7 sahifa', 'CMS yoki admin (ixtiyoriy)', 'Integratsiya: Telegram/Email'],
+          points: ['3-7 sahifa', 'CMS (ixtiyoriy)', 'Integratsiya: Telegram/Email'],
         },
         {
           name: 'Pro',
-          tag: 'Web-app / admin panel',
+          tag: 'Web-app',
           time: '14-30 kun',
           price: 'Kelishiladi',
-          points: ['Auth + rollar', 'Dashboard + CRUD', 'Deploy + monitoring'],
+          points: ['Auth + rollar', 'Dashboard + CRUD', 'Deploy'],
         },
       ],
     },
@@ -101,7 +101,7 @@ export const translations = {
       items: [
         {
           q: 'Narx qanday hisoblanadi?',
-          a: 'Sahifalar soni, funksiyalar (admin, auth, integratsiya), dizayn murakkabligi va muddatga qarab aniqlanadi.',
+          a: 'Sahifalar soni, funksiyalar (auth, integratsiya), dizayn murakkabligi va muddatga qarab aniqlanadi.',
         },
         {
           q: 'Muddat qancha bo‘ladi?',
@@ -128,7 +128,7 @@ export const translations = {
       detailsDesc: 'Quyidagilardan 2-3 tasini yozsangiz, tezda aniq taklif va muddat aytamiz.',
       checklist: [
         'Sayt turi: landing / korporativ / web-app',
-        'Kerakli sahifalar yoki funksiyalar (masalan: katalog, admin, payment)',
+        'Kerakli sahifalar yoki funksiyalar (masalan: katalog, payment)',
         'Deadline (qachonga kerak)',
         'Byudjet diapazoni (ixtiyoriy)',
       ],
@@ -211,7 +211,7 @@ export const translations = {
           tag: 'Web-app / админ-панель',
           time: '14-30 дней',
           price: 'По договоренности',
-          points: ['Auth + роли', 'Dashboard + CRUD', 'Deploy + monitoring'],
+          points: ['Auth + роли', 'Dashboard + CRUD', 'Deploy'],
         },
       ],
     },
@@ -291,7 +291,7 @@ export const translations = {
       titleBefore: 'Turn your idea into a',
       titleAccent: 'working',
       titleAfter: 'product with Ilgor studios.',
-      desc: 'We build websites, landing pages, admin panels, and web solutions that automate business workflows. One goal: beautiful design, fast performance, and real leads/sales.',
+      desc: 'We build websites, landing pages, and web solutions that automate business workflows. One goal: beautiful design, fast performance, and real leads/sales.',
       primary: 'Packages and timeline',
       secondary: 'Services',
       stats: [
@@ -307,11 +307,11 @@ export const translations = {
         'Everything your project needs: design, frontend, backend, integrations, SEO, and deploy. We keep quality high at every stage.',
       cards: [
         { title: 'Landing and corporate websites', desc: 'Conversion, speed, SEO, animation, and premium look.' },
-        { title: 'Web apps and admin panels', desc: 'Role-based access, dashboards, analytics, integrations.' },
+        { title: 'Web app solutions', desc: 'Role-based access, dashboards, analytics, integrations.' },
         { title: 'UI/UX design + brand', desc: 'Figma design, design system, prototypes, and user flows.' },
         { title: 'API and integrations', desc: 'Telegram bot, payment, CRM, ERP, Google services.' },
         { title: 'Performance and security', desc: 'Core Web Vitals, optimization, secure configuration.' },
-        { title: 'Technical support', desc: 'Monitoring, updates, content, A/B testing, and iteration.' },
+        { title: 'Technical support', desc: 'Updates, content, A/B testing, and iteration.' },
       ],
       cardBadge: 'Ready result + clear deadline',
     },
@@ -336,14 +336,14 @@ export const translations = {
           tag: 'Corporate website',
           time: '10-18 days',
           price: 'Negotiable',
-          points: ['3-7 pages', 'CMS or admin panel (optional)', 'Integrations: Telegram/Email'],
+          points: ['3-7 pages', 'CMS (optional)', 'Integrations: Telegram/Email'],
         },
         {
           name: 'Pro',
-          tag: 'Web app / admin panel',
+          tag: 'Web app',
           time: '14-30 days',
           price: 'Negotiable',
-          points: ['Auth + roles', 'Dashboard + CRUD', 'Deploy + monitoring'],
+          points: ['Auth + roles', 'Dashboard + CRUD', 'Deploy'],
         },
       ],
     },
@@ -364,7 +364,7 @@ export const translations = {
       items: [
         {
           q: 'How is pricing calculated?',
-          a: 'It depends on number of pages, functionality (admin, auth, integrations), design complexity, and timeline.',
+          a: 'It depends on number of pages, functionality (auth, integrations), design complexity, and timeline.',
         },
         {
           q: 'What is the typical timeline?',
@@ -391,7 +391,7 @@ export const translations = {
       detailsDesc: 'Share any 2-3 points below and we can provide a clear proposal and timeline quickly.',
       checklist: [
         'Website type: landing / corporate / web app',
-        'Required pages or features (e.g., catalog, admin panel, payment)',
+        'Required pages or features (e.g., catalog, payment)',
         'Deadline (when it is needed)',
         'Budget range (optional)',
       ],
